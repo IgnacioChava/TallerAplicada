@@ -17,6 +17,8 @@ public partial class Reservation
 
     public DateTime? CheckOutDate { get; set; }
 
+    public int CustomersIn { get;set; }
+
     public virtual Customer? Customer { get; set; }
 
     public virtual Room? Room { get; set; }

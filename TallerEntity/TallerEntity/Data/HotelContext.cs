@@ -88,6 +88,7 @@ public partial class HotelContext : DbContext
             entity.Property(e => e.CheckInDate).HasColumnType("datetime");
             entity.Property(e => e.CheckOutDate).HasColumnType("datetime");
             entity.Property(e => e.ReservationDate).HasColumnType("datetime");
+            entity.Property(e => e.CustomersIn).HasMaxLength(30);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Reservations)
                 .HasForeignKey(d => d.CustomerID)
