@@ -22,6 +22,8 @@ public partial class HotelContext : DbContext
 
     public virtual DbSet<CustomerCompanion> CustomerCompanions { get; set; }
 
+    public virtual DbSet<CustomerReservationsView> CustomerReservationsViews { get; set; }
+
     public virtual DbSet<Email> Emails { get; set; }
 
     public virtual DbSet<Facility> Facilities { get; set; }
@@ -29,8 +31,6 @@ public partial class HotelContext : DbContext
     public virtual DbSet<Reservation> Reservations { get; set; }
 
     public virtual DbSet<Room> Rooms { get; set; }
-
-    public virtual DbSet<Vista_Customer_Info> Vista_Customer_Infos { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -66,6 +66,26 @@ public partial class HotelContext : DbContext
             entity.ToTable("CustomerCompanion");
 
             entity.Property(e => e.CustomerCompanionID).ValueGeneratedOnAdd();
+        });
+
+        modelBuilder.Entity<CustomerReservationsView>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("CustomerReservationsView");
+
+            entity.Property(e => e.CodeRoom)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.NameCustomer)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Email>(entity =>
@@ -123,20 +143,6 @@ public partial class HotelContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
-        });
-
-        modelBuilder.Entity<Vista_Customer_Info>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("Vista_Customer_Info");
-
-            entity.Property(e => e.Email)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(255)
-                .IsUnicode(false);
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TallerEntity.Models.Vista_Customer_Info>
+﻿@model IEnumerable<TallerEntity.Models.CustomerReservationsView>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,10 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.NameCustomer)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CodeRoom)
             </th>
             <th></th>
         </tr>
@@ -25,11 +31,17 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.NameCustomer)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodeRoom)
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CustomerID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.CustomerID">Details</a> |

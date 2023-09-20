@@ -46,7 +46,7 @@ namespace TallerEntity.Controllers
                })
                .ToList();*/
 
-                var customerList = db.Vista_Customer_Infos.FromSqlRaw("SELECT * FROM Vista_Customer_Info").ToList();
+                var customerList = db.CustomerReservationsViews.FromSqlRaw("SELECT * FROM CustomerReservationsView").ToList();
 
 
                 return View(customerList);
@@ -112,11 +112,12 @@ namespace TallerEntity.Controllers
                 db.SaveChanges();*/
 
 
-                string sqlQuery = "INSERT INTO Customers (Name, Email, Phone) VALUES (@Name, @Email, @Phone)";
+                string sqlQuery = "INSERT INTO Customers (CustomerID, Name, Email, Phone) VALUES (@CustomerID, @Name, @Email, @Phone)";
 
                 // Parámetros para la consulta INSERT
                 var parameters = new SqlParameter[]
                 {
+                    new SqlParameter("@CustomerID", customer.CustomerID),
                     new SqlParameter("@Name", customer.Name),
                     new SqlParameter("@Email", customer.Email),
                     new SqlParameter("@Phone", customer.Phone)
@@ -162,10 +163,6 @@ namespace TallerEntity.Controllers
             {
                 var existingCustomer = db.Customers.Find(id);
 
-                if (existingCustomer == null)
-                {
-
-
                     /*existingCustomer.Name =  editedCustomer.Name;
                     existingCustomer.Email = editedCustomer.Email;
                     existingCustomer.Phone = editedCustomer.Phone;
@@ -187,7 +184,7 @@ namespace TallerEntity.Controllers
 
                     // Ejecutar la consulta SQL UPDATE utilizando FromSqlRaw
                     int rowsAffected = db.Database.ExecuteSqlRaw(sqlQuery, parameters);
-                    
+
                     if (rowsAffected > 0)
                     {
                         // La eliminación fue exitosa, redirigir a la página de éxito o realizar alguna otra acción
@@ -199,11 +196,8 @@ namespace TallerEntity.Controllers
                         return NotFound(); // Puedes manejar el caso en que el cliente no se encuentra
                     }
 
-                    return RedirectToAction("Index");
-                }
-                else { 
+                    
                 
-                }
 
 
                 return RedirectToAction(nameof(Index));
