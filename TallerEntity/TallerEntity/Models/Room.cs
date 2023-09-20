@@ -15,7 +15,7 @@ public partial class Room
 
     public decimal? Price { get; set; }
 
-    public bool? Availability { get; set; }
+    public bool? AvailabilityRoom { get; set; }
 
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 }
