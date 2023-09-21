@@ -17,34 +17,34 @@ namespace TallerEntity.Controllers
             try
             {
                 //Consultamos lso datos utilizando el mapeo de Entity este utiliza linq para optener los datos
-                var customerList = new List<Vista_Customer_Info>();
-                customerList= db.Vista_Customer_Infos.ToList();
+               // var customerList = new List<Vista_Customer_Info>();
+               // customerList= db.Vista_Customer_Infos.ToList();
 
 
-                //vamos a crear nuestra propia consulta LINQ
-                var customerList = (
-                    from customer in db.Customers
-                    select new Vista_Customer_Info
-                    {
-                        Name = customer.Name,
-                        Email = customer.Email,
-                        Phone = customer.Phone
-                    }
-                ).ToList();
+               // //vamos a crear nuestra propia consulta LINQ
+               // var customerList = (
+               //     from customer in db.Customers
+               //     select new Vista_Customer_Info
+               //     {
+               //         Name = customer.Name,
+               //         Email = customer.Email,
+               //         Phone = customer.Phone
+               //     }
+               // ).ToList();
 
-                //Consulta con querys de sql
+               // //Consulta con querys de sql
 
 
 
-                //Usando expresiones Lambda y metodos de extencion Linq
-               var customerList = db.Customers
-               .Select(customer => new Vista_Customer_Info
-               {
-                   CustomerID = customer.CustomerID,
-                   Name = customer.Name,
-                   Email = customer.Email
-               })
-               .ToList();
+               // //Usando expresiones Lambda y metodos de extencion Linq
+               //var customerList = db.Customers
+               //.Select(customer => new Vista_Customer_Info
+               //{
+               //    CustomerID = customer.CustomerID,
+               //    Name = customer.Name,
+               //    Email = customer.Email
+               //})
+               //.ToList();
 
                 var customerList = db.CustomerReservationsViews.FromSqlRaw("SELECT * FROM CustomerReservationsView").ToList();
 
@@ -59,8 +59,16 @@ namespace TallerEntity.Controllers
 
         }
 
+        public ActionResult FindReservation(Guid id)
+        {
+            var Reservation = new List<Reservation>();
+            Reservation = db.Reservations.Where(obj => obj.CustomerID == id).ToList();
+
+            return View(Reservation);
+        }
+
         // GET: CustomerController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(Guid id)
         {
 
 
@@ -147,6 +155,21 @@ namespace TallerEntity.Controllers
 
                 return View(ex.Message);
             }
+        }
+
+        public ActionResult CreateCompanion()
+        {
+
+            return View();
+        }
+
+        // POST: CustomerController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCompanion(CustomerCompanion customer)
+        {
+
+            return View();
         }
 
         // GET: CustomerController/Edit/5

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<TallerEntity.Models.Reservation>
+
+@{
+    ViewData["Title"] = "FindReservation";
+}
+
+<h1>FindReservation</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ReservationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckInDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckOutDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customersln)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReservationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckInDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckOutDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customersln)
+            </td>
+            
+            
+        </tr>
+}
+    </tbody>
+</table>

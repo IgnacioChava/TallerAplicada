@@ -18,12 +18,12 @@ namespace TallerEntity.Controllers
 
             try
             {
-                var reservationList = new List<Reservation>();
+                var roomList = new List<Room>();
 
-                reservationList = db.Reservations.ToList();
+                roomList = db.Rooms.ToList();
 
 
-                return View(reservationList);
+                return View(roomList);
             }
             catch
             {
@@ -32,11 +32,11 @@ namespace TallerEntity.Controllers
             
         }
 
-        // GET: HotelContext/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+        
+        
+
+        
+        
 
         // GET: HotelContext/Create
         public ActionResult Create()
@@ -70,11 +70,12 @@ namespace TallerEntity.Controllers
         // POST: HotelContext/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateReservation(Reservation reservation)
+        public ActionResult CreateReservation(ReservationCreate reservation)
         {
             try
             {
-
+                var CustomerId = db.Customers.Where(c => c.Cedula == reservation.Cedula).FirstOrDefault().CustomerID;
+               // var customer = db.Customers.Where(c => c.Cedula == reservation.CustomerID);
                 /*LINQ
                  
                  List<Reservation> listaOrdenada = db.Reservations.OrderBy(objeto => objeto.ReservationID).ToList();
@@ -100,7 +101,7 @@ namespace TallerEntity.Controllers
 
 
 
-                var n = db.CustomerCompanions.Where(c => c.CompanionID == reservation.CustomerID).ToList().Count;
+                var n = db.CustomerCompanions.Where(c => c.CompanionID == CustomerId).ToList().Count;
 
                 if (c < n)
                 {
@@ -110,12 +111,12 @@ namespace TallerEntity.Controllers
 
                 var parameter = new List<SqlParameter>();
                 parameter.Add(new SqlParameter("@ReservationID", id));
-                parameter.Add(new SqlParameter("@CustomerID", reservation.CustomerID));
+                parameter.Add(new SqlParameter("@CustomerID", CustomerId));
                 parameter.Add(new SqlParameter("@RoomID", reservation.RoomID));
                 parameter.Add(new SqlParameter("@ReservationDate", reservation.ReservationDate));
                 parameter.Add(new SqlParameter("@CheckInDate", reservation.CheckInDate));
                 parameter.Add(new SqlParameter("@CheckOutDate", reservation.CheckOutDate));
-                parameter.Add(new SqlParameter("@CustomersIn", reservation.Customersln));
+                parameter.Add(new SqlParameter("@CustomersIn", n));
 
 
                 var result = Task.Run(() => db.Database.ExecuteSqlRaw(@"exec dbo.CreateReservations @ReservationID, @CustomerID, @RoomID, @ReservationDate, @CheckInDate, @CheckOutDate, @CustomersIn", parameter.ToArray()));
