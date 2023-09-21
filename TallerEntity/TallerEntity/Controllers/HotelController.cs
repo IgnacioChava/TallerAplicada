@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using TallerEntity.Data;
 using TallerEntity.Models;
@@ -53,6 +55,64 @@ namespace TallerEntity.Controllers
             }
             catch
             {
+                return View();
+            }
+        }
+
+        public ActionResult CreateReservation()
+        {
+
+            return View();
+        }
+
+        // POST: HotelContext/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateReservation(Reservation reservation)
+        {
+            try
+            {
+                var id = Guid.NewGuid();
+
+
+                if (db.Rooms.Find(reservation.RoomID).AvailabilityRoom == false)
+                {
+                    ViewBag.reservationBad = "Este cuarto esta ocupado";
+                    return View();
+                }
+
+                var c = db.Rooms.Find(reservation.RoomID).Capacity;
+
+                var n = db.CustomerCompanions.Where(c => c.CompanionID == reservation.CustomerID).ToList().Count;
+
+                if (c < n)
+                {
+                    ViewBag.reservationBad = "Este cuarto no acepta mas de " + c + " clientes";
+                    return View();
+                }
+
+                var parameter = new List<SqlParameter>();
+                parameter.Add(new SqlParameter("@ReservationID", id));
+                parameter.Add(new SqlParameter("@CustomerID", reservation.CustomerID));
+                parameter.Add(new SqlParameter("@RoomID", reservation.RoomID));
+                parameter.Add(new SqlParameter("@ReservationDate", reservation.ReservationDate));
+                parameter.Add(new SqlParameter("@CheckInDate", reservation.CheckInDate));
+                parameter.Add(new SqlParameter("@CheckOutDate", reservation.CheckOutDate));
+                parameter.Add(new SqlParameter("@CustomersIn", reservation.Customersln));
+
+
+                var result = Task.Run(() => db.Database.ExecuteSqlRaw(@"exec dbo.CreateReservations @ReservationID, @CustomerID, @RoomID, @ReservationDate, @CheckInDate, @CheckOutDate, @CustomersIn", parameter.ToArray()));
+
+
+                ViewBag.reservation = id;
+
+                db.SaveChangesAsync();
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.reservationBad = ex.Message;
                 return View();
             }
         }
