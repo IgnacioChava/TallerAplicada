@@ -5,9 +5,17 @@ namespace TallerEntity.Models;
 
 public partial class CustomerCompanion
 {
-    public int CustomerCompanionID { get; set; }
+    public Guid CustomerID { get; set; }
 
-    public int CustomerID { get; set; }
+    public int Cedula { get; set; }
 
-    public int RoomsID { get; set; }
+    public string Name { get; set; } = null!;
+
+    public string Email { get; set; } = null!;
+
+    public string Phone { get; set; } = null!;
+
+    public Guid? CompanionID { get; set; }
+
+    public virtual Customer? Companion { get; set; }
 }
