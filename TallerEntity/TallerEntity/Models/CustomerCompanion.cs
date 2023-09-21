@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TallerEntity.Models;
 
-public partial class Customer
+public partial class CustomerCompanion
 {
     public Guid CustomerID { get; set; }
 
@@ -15,7 +15,7 @@ public partial class Customer
 
     public string Phone { get; set; } = null!;
 
-    public virtual ICollection<CustomerCompanion> CustomerCompanions { get; set; } = new List<CustomerCompanion>();
+    public Guid? CompanionID { get; set; }
 
-    public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+    public virtual Customer? Companion { get; set; }
 }

@@ -20,6 +20,10 @@ public partial class HotelContext : DbContext
 
     public virtual DbSet<Customer> Customers { get; set; }
 
+    public virtual DbSet<CustomerCompanion> CustomerCompanions { get; set; }
+
+    public virtual DbSet<CustomerReservationsView> CustomerReservationsViews { get; set; }
+
     public virtual DbSet<Email> Emails { get; set; }
 
     public virtual DbSet<Facility> Facilities { get; set; }
@@ -41,13 +45,59 @@ public partial class HotelContext : DbContext
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.CustomerID).HasName("PK__Customer__A4AE64B8436AE8E3");
+            entity.HasKey(e => e.CustomerID).HasName("PK__Customer__A4AE64B8FB5B0777");
+
+            entity.HasIndex(e => e.Cedula, "UQ__Customer__B4ADFE385C67632D").IsUnique();
 
             entity.Property(e => e.CustomerID).ValueGeneratedNever();
             entity.Property(e => e.Email)
-                .HasMaxLength(255)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<CustomerCompanion>(entity =>
+        {
+            entity.HasKey(e => e.CustomerID).HasName("PK__Customer__A4AE64B8CDA75541");
+
+            entity.ToTable("CustomerCompanion");
+
+            entity.HasIndex(e => e.Cedula, "UQ__Customer__B4ADFE38AFE53E33").IsUnique();
+
+            entity.Property(e => e.CustomerID).ValueGeneratedNever();
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Companion).WithMany(p => p.CustomerCompanions)
+                .HasForeignKey(d => d.CompanionID)
+                .HasConstraintName("FK__CustomerC__Compa__5165187F");
+        });
+
+        modelBuilder.Entity<CustomerReservationsView>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("CustomerReservationsView");
+
+            entity.Property(e => e.CodeRoom)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.NameCustomer)
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.Phone)
@@ -82,7 +132,7 @@ public partial class HotelContext : DbContext
 
         modelBuilder.Entity<Reservation>(entity =>
         {
-            entity.HasKey(e => e.ReservationID).HasName("PK__Reservat__B7EE5F04CF544AFD");
+            entity.HasKey(e => e.ReservationID).HasName("PK__Reservat__B7EE5F044FF43F6D");
 
             entity.Property(e => e.ReservationID).ValueGeneratedNever();
             entity.Property(e => e.CheckInDate).HasColumnType("datetime");
@@ -91,11 +141,13 @@ public partial class HotelContext : DbContext
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Reservations)
                 .HasForeignKey(d => d.CustomerID)
-                .HasConstraintName("FK__Reservati__Custo__286302EC");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Reservati__Custo__4CA06362");
 
             entity.HasOne(d => d.Room).WithMany(p => p.Reservations)
                 .HasForeignKey(d => d.RoomID)
-                .HasConstraintName("FK__Reservati__RoomI__29572725");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Reservati__RoomI__4D94879B");
         });
 
         modelBuilder.Entity<Room>(entity =>
