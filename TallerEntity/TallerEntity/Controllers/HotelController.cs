@@ -61,7 +61,9 @@ namespace TallerEntity.Controllers
 
         public ActionResult CreateReservation()
         {
-
+            var customerList = new List<Customer>();
+                customerList= db.Customers.ToList();
+                ViewBag.Cedulas = customerList;
             return View();
         }
 
@@ -72,6 +74,19 @@ namespace TallerEntity.Controllers
         {
             try
             {
+
+                /*LINQ
+                 
+                 List<Reservation> listaOrdenada = db.Reservations.OrderBy(objeto => objeto.ReservationID).ToList();
+
+                if (listaOrdenada.Any())
+                {
+                    Reservation ultimoObjeto = listaOrdenada.Last();
+                    //id = ultimoObjeto.ReservationID + 1;
+
+                }
+                 */
+
                 var id = Guid.NewGuid();
 
 
@@ -82,6 +97,8 @@ namespace TallerEntity.Controllers
                 }
 
                 var c = db.Rooms.Find(reservation.RoomID).Capacity;
+
+
 
                 var n = db.CustomerCompanions.Where(c => c.CompanionID == reservation.CustomerID).ToList().Count;
 

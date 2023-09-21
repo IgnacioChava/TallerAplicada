@@ -95,10 +95,10 @@ public partial class HotelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.Email)
-                .HasMaxLength(255)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.NameCustomer)
-                .HasMaxLength(255)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)

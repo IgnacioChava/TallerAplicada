@@ -17,12 +17,12 @@ namespace TallerEntity.Controllers
             try
             {
                 //Consultamos lso datos utilizando el mapeo de Entity este utiliza linq para optener los datos
-                /*var customerList = new List<Vista_Customer_Info>();
-                customerList= db.Vista_Customer_Infos.ToList();*/
+                var customerList = new List<Vista_Customer_Info>();
+                customerList= db.Vista_Customer_Infos.ToList();
 
 
                 //vamos a crear nuestra propia consulta LINQ
-                /*var customerList = (
+                var customerList = (
                     from customer in db.Customers
                     select new Vista_Customer_Info
                     {
@@ -30,21 +30,21 @@ namespace TallerEntity.Controllers
                         Email = customer.Email,
                         Phone = customer.Phone
                     }
-                ).ToList();*/
+                ).ToList();
 
                 //Consulta con querys de sql
 
 
 
                 //Usando expresiones Lambda y metodos de extencion Linq
-               /* var customerList = db.Customers
+               var customerList = db.Customers
                .Select(customer => new Vista_Customer_Info
                {
                    CustomerID = customer.CustomerID,
                    Name = customer.Name,
                    Email = customer.Email
                })
-               .ToList();*/
+               .ToList();
 
                 var customerList = db.CustomerReservationsViews.FromSqlRaw("SELECT * FROM CustomerReservationsView").ToList();
 
@@ -111,13 +111,16 @@ namespace TallerEntity.Controllers
                 /*db.Customers.Add(customer);
                 db.SaveChanges();*/
 
+                var id = Guid.NewGuid();
+                customer.CustomerID = id;
 
-                string sqlQuery = "INSERT INTO Customers (CustomerID, Name, Email, Phone) VALUES (@CustomerID, @Name, @Email, @Phone)";
+                string sqlQuery = "INSERT INTO Customers (CustomerID, Cedula, Name, Email, Phone) VALUES (@CustomerID, @Cedula, @Name, @Email, @Phone)";
 
                 // Parámetros para la consulta INSERT
                 var parameters = new SqlParameter[]
                 {
                     new SqlParameter("@CustomerID", customer.CustomerID),
+                    new SqlParameter("@Cedula", customer.Cedula),
                     new SqlParameter("@Name", customer.Name),
                     new SqlParameter("@Email", customer.Email),
                     new SqlParameter("@Phone", customer.Phone)
