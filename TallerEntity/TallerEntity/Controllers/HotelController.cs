@@ -60,22 +60,20 @@ namespace TallerEntity.Controllers
         {
             try
             {
-                List<Reservation> listaOrdenada = db.Reservations.OrderBy(objeto => objeto.ReservationID).ToList();
-                int id = 1;
-                if (listaOrdenada.Any())
-                {
-                    Reservation ultimoObjeto = listaOrdenada.Last();
-                    id = ultimoObjeto.ReservationID + 1;
-
-                }
+                var id = Guid.NewGuid();
+                
                
                 if (db.Rooms.Find(reservation.RoomID).AvailabilityRoom == false)
                 {
                     ViewBag.reservationBad = "Este cuarto esta ocupado";
                     return View();
                 }
+
                 var c = db.Rooms.Find(reservation.RoomID).Capacity;
-                if ( c < reservation.CustomersIn)
+
+                var n = db.CustomerCompanions.Where(c => c.CompanionID == reservation.CustomerID).ToList().Count;
+
+                if ( c < n)
                 {
                     ViewBag.reservationBad = "Este cuarto no acepta mas de "+c+" clientes";
                     return View();
@@ -88,7 +86,7 @@ namespace TallerEntity.Controllers
                 parameter.Add(new SqlParameter("@ReservationDate", reservation.ReservationDate));
                 parameter.Add(new SqlParameter("@CheckInDate", reservation.CheckInDate));
                 parameter.Add(new SqlParameter("@CheckOutDate", reservation.CheckOutDate));
-                parameter.Add(new SqlParameter("@CustomersIn", reservation.CustomersIn));
+                parameter.Add(new SqlParameter("@CustomersIn", reservation.Customersln));
 
 
                 var result = Task.Run(() => db.Database.ExecuteSqlRaw(@"exec dbo.CreateReservations @ReservationID, @CustomerID, @RoomID, @ReservationDate, @CheckInDate, @CheckOutDate, @CustomersIn", parameter.ToArray()));
