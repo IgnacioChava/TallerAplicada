@@ -17,21 +17,22 @@ namespace TallerEntity.Controllers
             try
             {
                 //Consultamos lso datos utilizando el mapeo de Entity este utiliza linq para optener los datos
-                // var customerList = new List<Vista_Customer_Info>();
-                // customerList= db.Vista_Customer_Infos.ToList();
+                 //var customerList = new List<CustomerReservationsView>();
+                 //customerList= db.CustomerReservationsViews.ToList();
 
 
                 // //vamos a crear nuestra propia consulta LINQ
-                // var customerList = (
-                //     from customer in db.Customers
-                //     select new Vista_Customer_Info
-                //     {
-                //         Name = customer.Name,
-                //         Email = customer.Email,
-                //         Phone = customer.Phone
-                //     }
-                // ).ToList();
-
+                /*var customerList = (
+                     from customer in db.CustomerReservationsViews
+                     select new CustomerReservationsView
+                     {
+                         NameCustomer = customer.NameCustomer,
+                         Email = customer.Email,
+                         Phone = customer.Phone,
+                         CodeRoom = customer.CodeRoom
+                     }
+                 ).ToList();
+                */
                 // //Consulta con querys de sql
 
 
@@ -47,7 +48,7 @@ namespace TallerEntity.Controllers
                 //.ToList();
 
 
-                /*var test = db.Database.SqlQueryRaw<string>(@"exec dbo.VerificarClientes").ToList();*/
+                var test = db.Database.SqlQueryRaw<string>(@"exec dbo.VerificarClientes").ToList();
 
                 
                 
@@ -70,6 +71,14 @@ namespace TallerEntity.Controllers
             Reservation = db.Reservations.Where(obj => obj.CustomerID == id).ToList();
 
             return View(Reservation);
+        }
+
+        public ActionResult FindCustomerCompanion(Guid id)
+        {
+            var customerCompanions = new List<CustomerCompanion>();
+            customerCompanions = db.CustomerCompanions.Where(obj => obj.CompanionID == id).ToList();
+
+            return View(customerCompanions);
         }
 
         // GET: CustomerController/Details/5
@@ -106,7 +115,32 @@ namespace TallerEntity.Controllers
 
 
         }
+        public ActionResult CustomerCompanion(Guid id)
+        {
+             
 
+            return View();
+        }
+
+        // POST: HotelContext/Delete/5
+        [HttpPost]
+        public ActionResult CustomerCompanion(CustomerCompanion customerCompanion)
+        {
+            try
+            {
+                //var CustomerId = db.Customers.Where(c => c.Cedula == customerCompanion.Cedula).FirstOrDefault().CustomerID;
+
+                var id = Guid.NewGuid();
+                customerCompanion.CustomerID = id;
+                db.CustomerCompanions.Add(customerCompanion);
+                db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
         // GET: CustomerController/Create
         public ActionResult Create()
         {
@@ -284,7 +318,7 @@ namespace TallerEntity.Controllers
                 else
                 {
                     // La eliminación no tuvo éxito, manejar el error de alguna manera
-                    return NotFound(); // Puedes manejar el caso en que el cliente no se encuentra
+                    return RedirectToAction("Index"); // Puedes manejar el caso en que el cliente no se encuentra
                 }
             }
             catch

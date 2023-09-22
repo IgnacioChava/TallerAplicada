@@ -47,6 +47,8 @@
                 <a asp-action="Details" asp-route-id="@item.CustomerID">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.CustomerID">Delete</a> |
                 <a asp-action="FindReservation" asp-route-id="@item.CustomerID">Reservation</a>
+                    <a asp-action="CustomerCompanion" asp-route-id="@item.CustomerID"> Create Companion</a>
+                    <a asp-action="FindCustomerCompanion" asp-route-id="@item.CustomerID"> Find Companions</a>
             </td>
         </tr>
 }
