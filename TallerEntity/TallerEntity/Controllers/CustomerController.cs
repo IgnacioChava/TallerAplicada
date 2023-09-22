@@ -17,37 +17,42 @@ namespace TallerEntity.Controllers
             try
             {
                 //Consultamos lso datos utilizando el mapeo de Entity este utiliza linq para optener los datos
-               // var customerList = new List<Vista_Customer_Info>();
-               // customerList= db.Vista_Customer_Infos.ToList();
+                // var customerList = new List<Vista_Customer_Info>();
+                // customerList= db.Vista_Customer_Infos.ToList();
 
 
-               // //vamos a crear nuestra propia consulta LINQ
-               // var customerList = (
-               //     from customer in db.Customers
-               //     select new Vista_Customer_Info
-               //     {
-               //         Name = customer.Name,
-               //         Email = customer.Email,
-               //         Phone = customer.Phone
-               //     }
-               // ).ToList();
+                // //vamos a crear nuestra propia consulta LINQ
+                // var customerList = (
+                //     from customer in db.Customers
+                //     select new Vista_Customer_Info
+                //     {
+                //         Name = customer.Name,
+                //         Email = customer.Email,
+                //         Phone = customer.Phone
+                //     }
+                // ).ToList();
 
-               // //Consulta con querys de sql
+                // //Consulta con querys de sql
 
 
 
-               // //Usando expresiones Lambda y metodos de extencion Linq
-               //var customerList = db.Customers
-               //.Select(customer => new Vista_Customer_Info
-               //{
-               //    CustomerID = customer.CustomerID,
-               //    Name = customer.Name,
-               //    Email = customer.Email
-               //})
-               //.ToList();
+                // //Usando expresiones Lambda y metodos de extencion Linq
+                //var customerList = db.Customers
+                //.Select(customer => new Vista_Customer_Info
+                //{
+                //    CustomerID = customer.CustomerID,
+                //    Name = customer.Name,
+                //    Email = customer.Email
+                //})
+                //.ToList();
 
-                var customerList = db.CustomerReservationsViews.FromSqlRaw("SELECT * FROM CustomerReservationsView").ToList();
 
+                /*var test = db.Database.SqlQueryRaw<string>(@"exec dbo.VerificarClientes").ToList();*/
+
+                
+                
+                var customerList= db.CustomerReservationsViews.FromSqlRaw("SELECT * FROM dbo.CustomerReservationsView").ToList();
+                
 
                 return View(customerList);
             }
@@ -173,7 +178,7 @@ namespace TallerEntity.Controllers
         }
 
         // GET: CustomerController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
             var customer = db.Customers.Find(id);
 
@@ -183,7 +188,7 @@ namespace TallerEntity.Controllers
         // POST: CustomerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Customer editedCustomer)
+        public ActionResult Edit(Guid id, Customer editedCustomer)
         {
             try
             {
@@ -222,11 +227,6 @@ namespace TallerEntity.Controllers
                         return NotFound(); // Puedes manejar el caso en que el cliente no se encuentra
                     }
 
-                    
-                
-
-
-                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -236,7 +236,7 @@ namespace TallerEntity.Controllers
         }
 
         // GET: CustomerController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
             var customer = db.Customers.Find(id);
             return View(customer);
@@ -245,7 +245,7 @@ namespace TallerEntity.Controllers
         // POST: CustomerController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(Guid id, IFormCollection collection)
         {
             try
             {
